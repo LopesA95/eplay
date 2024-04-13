@@ -1,4 +1,4 @@
-import styled, { createGlobalStyle } from 'styled-components'
+import { createGlobalStyle } from 'styled-components'
 import { colors } from './theme/theme'
 
 export const GlobalStyle = createGlobalStyle`
@@ -24,4 +24,3 @@ export const GlobalStyle = createGlobalStyle`
     margin: 0 auto;
   }
 `
-export const Tag = styled.div``
