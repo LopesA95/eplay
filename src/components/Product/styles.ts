@@ -6,6 +6,7 @@ export const Card = styled.div`
   background-color: ${colors.gray};
   border-radius: 8px;
   padding: 8px;
+  position: relative;
 
   ${TagContainer} {
     margin-right: 8px;
@@ -21,10 +22,15 @@ export const CardTitle = styled.h3`
   margin-bottom: 8px;
 `
 
-export const Descrition = styled.p`
+export const Description = styled.p`
   font-size: 14px;
   line-height: 22px;
 
   display: block;
   margin-top: 16px;
+`
+export const Infos = styled.div`
+  position: absolute;
+  top: 16px;
+  right: 16px;
 `
