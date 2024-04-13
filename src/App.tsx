@@ -1,12 +1,13 @@
+import { Banner } from './components/Banner'
 import { Header } from './components/Header'
-import { Container } from './styles/global'
 
 export function App() {
   return (
-    <Container>
-      <div>
+    <>
+      <div className="container">
         <Header />
       </div>
-    </Container>
+      <Banner />
+    </>
   )
 }
