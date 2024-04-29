@@ -1,115 +1,47 @@
+import { useEffect, useState } from 'react'
 import { ProductsList } from '../../components/ProductsList'
+import { Game } from '../Home'
 
-import resident from '../../assets/images/resident.png'
-import diablo from '../../assets/images/diablo.png'
-import zelda from '../../assets/images/zelda.png'
-import starwars from '../../assets/images/star_wars.png'
-import streetFigther from '../../assets/images/streetFighter.png'
+export const Categories = () => {
+  const [gamesAcao, setGamesAcao] = useState<Game[]>([])
+  const [gamesEsportes, setGamesEsportes] = useState<Game[]>([])
+  const [gamesRPG, setGamesRPG] = useState<Game[]>([])
+  const [gamesLuta, setGamesLuta] = useState<Game[]>([])
+  const [gamesSimulacao, setGamesSimulacao] = useState<Game[]>([])
 
-import { Game } from '../../models/Game'
+  useEffect(() => {
+    fetch('https://fake-api-tau.vercel.app/api/eplay/acao')
+      .then((response) => response.json())
+      .then((res) => setGamesAcao(res))
 
-const promocoes: Game[] = [
-  {
-    id: 1,
-    category: 'Ação',
-    description:
-      'Resident Evil 4, conhecido no Japão como Biohazard 4, é um jogo eletrônico de survival horror...',
+    fetch('https://fake-api-tau.vercel.app/api/eplay/esportes')
+      .then((response) => response.json())
+      .then((res) => setGamesEsportes(res))
 
-    title: 'Resident Evil 4',
-    system: 'Windows',
-    infos: ['10%', 'R$ 250'],
-    image: resident
-  },
+    fetch('https://fake-api-tau.vercel.app/api/eplay/rpg')
+      .then((response) => response.json())
+      .then((res) => setGamesRPG(res))
 
-  {
-    id: 2,
-    category: 'Ação',
-    description:
-      'Resident Evil 4, conhecido no Japão como Biohazard 4, é um jogo eletrônico de survival horror...',
+    fetch('https://fake-api-tau.vercel.app/api/eplay/luta')
+      .then((response) => response.json())
+      .then((res) => setGamesLuta(res))
 
-    title: 'Resident Evil 4',
-    system: 'PS5',
-    infos: ['5%', 'R$ 290'],
-    image: resident
-  },
+    fetch('https://fake-api-tau.vercel.app/api/eplay/simulacao')
+      .then((response) => response.json())
+      .then((res) => setGamesSimulacao(res))
+  }, [])
 
-  {
-    id: 3,
-    category: 'Ação',
-    description:
-      'Resident Evil 4, conhecido no Japão como Biohazard 4, é um jogo eletrônico de survival horror...',
-
-    title: 'Resident Evil 4',
-    system: 'Windows',
-    infos: ['10%', 'R$ 250'],
-    image: resident
-  },
-
-  {
-    id: 4,
-    category: 'Ação',
-    description:
-      'Resident Evil 4, conhecido no Japão como Biohazard 4, é um jogo eletrônico de survival horror...',
-
-    title: 'Resident Evil 4',
-    system: 'Windows',
-    infos: ['10%', 'R$ 250'],
-    image: resident
-  }
-]
-
-const emBreve: Game[] = [
-  {
-    id: 5,
-    category: 'RPG',
-    description:
-      'Diablo IV é um RPG de ação em desenvolvimento pela Blizzard Entertainment.',
-
-    title: 'Diablo 4',
-    system: 'Windows',
-    infos: ['17/05'],
-    image: diablo
-  },
-  {
-    id: 6,
-    category: 'Aventura',
-    description:
-      'Star Wars Jedi: Survivor é um próximo jogo de ação e aventura desenvolvido pela Respawn...',
-
-    title: 'Star Wars',
-    system: 'Windows',
-    infos: ['17/05'],
-    image: starwars
-  },
-  {
-    id: 7,
-    category: 'Luta',
-    description:
-      'Street Fighter 6 é um próximo jogo de luta desenvolvido e publicado pela Capcom.',
-
-    title: 'Street Fighter 6',
-    system: 'Windows',
-    infos: ['17/05'],
-    image: streetFigther
-  },
-  {
-    id: 8,
-    category: 'RPG',
-    description:
-      'Uma aventura épica pela terra e pelos céus de Hyrule aguarda em The Legend of Zelda™..',
-
-    title: 'Zelda',
-    system: 'Switch',
-    infos: ['17/05'],
-    image: zelda
-  }
-]
-
-export const Categories = () => (
-  <>
-    <ProductsList games={promocoes} title="RPG" background="gray" />
-    <ProductsList games={emBreve} title="Ação" background="black" />
-    <ProductsList games={promocoes} title="Aventura" background="gray" />
-    <ProductsList games={emBreve} title="FPS" background="black" />
-  </>
-)
+  return (
+    <>
+      <ProductsList games={gamesEsportes} title="Esportes" background="black" />
+      <ProductsList games={gamesAcao} title="Açao" background="gray" />
+      <ProductsList games={gamesRPG} title="RPG" background="black" />
+      <ProductsList games={gamesLuta} title="Luta" background="gray" />
+      <ProductsList
+        games={gamesSimulacao}
+        title="Simulação"
+        background="black"
+      />
+    </>
+  )
+}

@@ -7,11 +7,7 @@ import play from '../../assets/images/button_play.svg'
 import close from '../../assets/images/close.svg'
 import hogwarts from '../../assets/images/hogwartsfundo.png'
 import zoom from '../../assets/images/maiszoom.svg'
-
-interface GalleryItem {
-  type: 'video' | 'image'
-  url: string
-}
+import { GalleryItem } from '../../pages/Home'
 
 const mock: GalleryItem[] = [
   {
