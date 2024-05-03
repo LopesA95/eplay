@@ -3,13 +3,25 @@ import { Gallery } from '../../components/Gallery'
 import { Hero } from '../../components/Hero'
 import { Section } from '../../components/Section'
 
-import resisdent from '../../assets/images/resident.png'
+import { useEffect, useState } from 'react'
+import { Game } from '../Home'
 
 export const Product = () => {
   const { id } = useParams()
+  const [game, setGame] = useState<Game>()
+
+  useEffect(() => {
+    fetch(`https://fake-api-tau.vercel.app/api/eplay/jogos/${id}`)
+      .then((res) => res.json())
+      .then((res) => setGame(res))
+  }, [id])
+
+  if (!game) {
+    return <h3>Carregando...</h3>
+  }
   return (
     <>
-      <Hero />
+      <Hero game={game} />
       <Section title="Sobre o jogo" background="black">
         <p>
           Hogwarts Legacy é um RPG de ação imersivo e de mundo aberto ambientado
@@ -36,7 +48,11 @@ export const Product = () => {
           jogo.
         </p>
       </Section>
-      <Gallery name="Jogo Teste" defaultCover={resisdent} />
+      <Gallery
+        name={game.name}
+        defaultCover={game.media.cover}
+        items={game.media.gallery}
+      />
     </>
   )
 }
