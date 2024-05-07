@@ -20,12 +20,12 @@ export const Banner = () => {
           <Precos>
             De <span>{formatPrice(game.prices.old)}</span>
             <br />
-            por apoenas {formatPrice(game.prices.current)}
+            por apenas {formatPrice(game.prices.current)}
           </Precos>
         </div>
         <Button
           type="link"
-          to="/produtos"
+          to="/products/${id}"
           title="Clique aqui para aproveitar esta oferta"
         >
           Aproveitar
