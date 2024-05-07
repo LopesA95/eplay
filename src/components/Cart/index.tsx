@@ -8,39 +8,50 @@ import {
   Sidebar
 } from './styles'
 
-import starWars from '../../assets/images/star_wars.png'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootReducer } from '../../store'
+import { close, removeToCart } from '../../store/reducers/cart'
+import { formatPrice } from '../ProductsList'
 import { Tag } from '../Tag'
 
 export const Cart = () => {
+  const { isOpen, items } = useSelector((state: RootReducer) => state.cart)
+  const dispatch = useDispatch()
+
+  const handleCloseCart = () => {
+    dispatch(close())
+  }
+
+  const getTotalPrice = () => {
+    return items.reduce((acc, item) => acc + item.prices.current!, 0)
+  }
+
+  const handleRemoveItem = (id: number) => {
+    dispatch(removeToCart(id))
+  }
+
   return (
-    <CartContainer>
-      <Overlay />
+    <CartContainer className={isOpen ? 'is-open' : ''}>
+      <Overlay onClick={handleCloseCart} />
       <Sidebar>
         <ul>
-          <CartItem>
-            <img src={starWars} alt="" />
-            <div>
-              <h3>Nome do produto</h3>
-              <Tag>RPG</Tag>
-              <Tag>Ps5</Tag>
-              <span>R$ 150,00</span>
-            </div>
-            <button type="button" />
-          </CartItem>
-          <CartItem>
-            <img src={starWars} alt="" />
-            <div>
-              <h3>Nome do produto</h3>
-              <Tag>RPG</Tag>
-              <Tag>Ps5</Tag>
-              <span>R$ 150,00</span>
-            </div>
-            <button type="button" />
-          </CartItem>
+          {items.map((item) => (
+            <CartItem key={item.id}>
+              <img src={item.media.thumbnail} alt={item.name} />
+              <div>
+                <h3>{item.name}</h3>
+                <Tag>{item.details.category}</Tag>
+                <Tag>{item.details.system}</Tag>
+                <span>{formatPrice(item.prices.current)}</span>
+              </div>
+              <button type="button" onClick={() => handleRemoveItem(item.id)} />
+            </CartItem>
+          ))}
         </ul>
-        <Quantity>2 jogo(s) no carrinho</Quantity>
+        <Quantity>{items.length} jogo(s) no carrinho</Quantity>
         <Prices>
-          Total de R$ 250,00 <span>Em até 6x sem juros</span>
+          Total de R$ {formatPrice(getTotalPrice())}{' '}
+          <span>Em até 6x sem juros</span>
         </Prices>
         <Button title="Clique aqui para continuar com a compra " type="button">
           Continuar com a compra
