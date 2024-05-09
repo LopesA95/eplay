@@ -21,15 +21,18 @@ export const Product = ({
   id
 }: Props) => {
   const getDesciption = (descriptions: string) => {
-    if (descriptions.length > 97) {
-      return descriptions.slice(0, 94) + '...'
+    if (descriptions.length > 80) {
+      return descriptions.slice(0, 77) + '...'
     }
     return descriptions
   }
 
   return (
     <div>
-      <Card to={`/product/${id}`}>
+      <Card
+        title={`Clique aqui para ver mais detalhes do jogo: ${title}`}
+        to={`/product/${id}`}
+      >
         <img src={image} alt={title} />
         <Infos>
           {infos.map((info) => (
