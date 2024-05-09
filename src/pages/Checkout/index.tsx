@@ -1,8 +1,14 @@
+import { useState } from 'react'
 import { Button } from '../../components/Button'
 import { Card } from '../../components/Card'
-import { InputGroup, Row } from './styles'
+import { InputGroup, Row, TabButton } from './styles'
+
+import boleto from '../../assets/images/boleto.svg'
+import cartao from '../../assets/images/card.svg'
 
 export const Checkout = () => {
+  const [payWithCard, setPayWithCard] = useState(false)
+
   return (
     <>
       <div className="container">
@@ -37,15 +43,84 @@ export const Checkout = () => {
         </Card>
 
         <Card title="Pagamento">
-          <div>
-            <p>
-              Ao optar por essa forma de pagamento, é importante lembrar que a
-              confirmação pode levar até 3 dias úteis, devido aos prazos
-              estabelecidos pelas instituições financeiras. Portanto, a
-              liberação do código de ativação do jogo adquirido ocorrerá somente
-              após a aprovação do pagamento do boleto.
-            </p>
-          </div>
+          <>
+            <TabButton
+              onClick={() => setPayWithCard(false)}
+              isActive={!payWithCard}
+            >
+              <img src={boleto} alt="Boleto Bancário" />
+              Boleto Bancário
+            </TabButton>
+            <TabButton
+              onClick={() => setPayWithCard(true)}
+              isActive={payWithCard}
+            >
+              <img src={cartao} alt="Cartão de crédito" />
+              Cartão de crédito
+            </TabButton>
+            <div className="margin-top">
+              {payWithCard ? (
+                <>
+                  <Row>
+                    <InputGroup>
+                      <label htmlFor="cardOwner">
+                        Nome do titular do cartão
+                      </label>
+                      <input id="cardOwner" type="text" />
+                    </InputGroup>
+                    <InputGroup>
+                      <label htmlFor="cpfCardOwner">
+                        CPF do titular do cartão
+                      </label>
+                      <input id="cpfCardOwner" type="text" />
+                    </InputGroup>
+                  </Row>
+                  <Row marginTop="24px">
+                    <InputGroup>
+                      <label htmlFor="cardDisplayName">Nome no cartão</label>
+                      <input id="cardDisplayName" type="text" />
+                    </InputGroup>
+                    <InputGroup>
+                      <label htmlFor="cardNumber">Número do cartão</label>
+                      <input id="cardNumber" type="text" />
+                    </InputGroup>
+                    <InputGroup maxWidth="123px">
+                      <label htmlFor="cardExpiration">Mês de vencimento</label>
+                      <input id="cardExpiration" type="text" />
+                    </InputGroup>
+                    <InputGroup maxWidth="123px">
+                      <label htmlFor="cardYearExpiration">
+                        Ano de vencimento
+                      </label>
+                      <input id="cardYearExpiration" type="text" />
+                    </InputGroup>
+                    <InputGroup maxWidth="48px">
+                      <label htmlFor="cardCVV">CVV</label>
+                      <input id="cardCVV" type="text" />
+                    </InputGroup>
+                  </Row>
+                  <Row marginTop="24px">
+                    <InputGroup maxWidth="150px">
+                      <label htmlFor="installments">Parcelamento</label>
+                      <select id="installments">
+                        <option>1x de R$200,00</option>
+                        <option>2x de R$200,00</option>
+                        <option>3x de R$200,00</option>
+                      </select>
+                    </InputGroup>
+                  </Row>
+                </>
+              ) : (
+                <p>
+                  Ao optar por essa forma de pagamento, é importante lembrar que
+                  a confirmação pode levar até 3 dias úteis, devido aos prazos
+                  estabelecidos pelas instituições financeiras. Portanto, a
+                  liberação do código de ativação do jogo adquirido ocorrerá
+                  somente após a aprovação do pagamento do boleto.
+                </p>
+              )}
+            </div>
+          </>
         </Card>
         <Button type="button" title="Clique aqui para finalizar a compra">
           Finalizar compra
