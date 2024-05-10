@@ -8,47 +8,53 @@ import {
 } from '../../services/api'
 
 export const Categories = () => {
-  const { data: actionGames } = useGetActionGamesQuery()
-  const { data: sportGames } = useGetSportGamesQuery()
-  const { data: simulationGames } = useGetSimulationGamesQuery()
-  const { data: figthGames } = useGetFigthGamesQuery()
-  const { data: rpgGames } = useGetRpgGamesQuery()
+  const { data: actionGames, isLoading: isLoadingAction } =
+    useGetActionGamesQuery()
+  const { data: sportGames, isLoading: isLoadingSports } =
+    useGetSportGamesQuery()
+  const { data: simulationGames, isLoading: isLoadingSimulation } =
+    useGetSimulationGamesQuery()
+  const { data: figthGames, isLoading: isLoadingFigth } =
+    useGetFigthGamesQuery()
+  const { data: rpgGames, isLoading: isLoadingRPG } = useGetRpgGamesQuery()
 
-  if (actionGames && sportGames && simulationGames && figthGames && rpgGames) {
-    return (
-      <>
-        <ProductsList
-          games={sportGames}
-          title="Esportes"
-          background="black"
-          id="sports"
-        />
-        <ProductsList
-          games={actionGames}
-          title="Açao"
-          background="gray"
-          id="action"
-        />
-        <ProductsList
-          games={rpgGames}
-          title="RPG"
-          background="black"
-          id="rpg"
-        />
-        <ProductsList
-          games={figthGames}
-          title="Luta"
-          background="gray"
-          id="figth"
-        />
-        <ProductsList
-          games={simulationGames}
-          title="Simulação"
-          background="black"
-          id="simulation"
-        />
-      </>
-    )
-  }
-  return <h4>Carregando...</h4>
+  return (
+    <>
+      <ProductsList
+        games={sportGames}
+        title="Esportes"
+        background="black"
+        id="sports"
+        isLoading={isLoadingSports}
+      />
+      <ProductsList
+        games={actionGames}
+        title="Açao"
+        background="gray"
+        id="action"
+        isLoading={isLoadingAction}
+      />
+      <ProductsList
+        games={rpgGames}
+        title="RPG"
+        background="black"
+        id="rpg"
+        isLoading={isLoadingRPG}
+      />
+      <ProductsList
+        games={figthGames}
+        title="Luta"
+        background="gray"
+        id="figth"
+        isLoading={isLoadingFigth}
+      />
+      <ProductsList
+        games={simulationGames}
+        title="Simulação"
+        background="black"
+        id="simulation"
+        isLoading={isLoadingSimulation}
+      />
+    </>
+  )
 }
