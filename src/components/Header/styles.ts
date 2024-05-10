@@ -21,6 +21,10 @@ export const HeaderBar = styled.header`
     color: ${colors.white};
     font-weight: bold;
   }
+
+  h1 {
+    line-height: 0;
+  }
 `
 
 export const NavMobile = styled.nav`
@@ -44,9 +48,10 @@ export const LinkItem = styled.li`
     }
   }
 `
-export const CartButton = styled.a`
+export const CartButton = styled.span`
   display: flex;
   cursor: pointer;
+  font-weight: bold;
   img {
     margin-left: 16px;
   }

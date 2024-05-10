@@ -1,6 +1,7 @@
 import { useFormik } from 'formik'
 import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import InputMask from 'react-input-mask'
+import { useDispatch, useSelector } from 'react-redux'
 import { Navigate } from 'react-router-dom'
 import * as Yup from 'yup'
 
@@ -13,6 +14,7 @@ import { Card } from '../../components/Card'
 import { usePurchaseMutation } from '../../services/api'
 
 import { RootReducer } from '../../store'
+import { clear } from '../../store/reducers/cart'
 import { converToBrl, getTotalPrice } from '../../utils'
 import { InputGroup, Row, TabButton } from './styles'
 
@@ -25,11 +27,13 @@ type Installment = {
 export const Checkout = () => {
   const [payWithCard, setPayWithCard] = useState(false)
 
-  const [purchase, { data, isSuccess }] = usePurchaseMutation()
+  const [purchase, { data, isSuccess, isLoading }] = usePurchaseMutation()
 
   const { items } = useSelector((state: RootReducer) => state.cart)
 
   const [installments, setInstallments] = useState<Installment[]>([])
+
+  const dispatch = useDispatch()
 
   const totalPrice = getTotalPrice(items)
 
@@ -88,7 +92,7 @@ export const Checkout = () => {
       cardCVV: Yup.string().when((values, schema) =>
         payWithCard ? schema.required('O campo é obrigatório') : schema
       ),
-      installments: Yup.string().when((values, schema) =>
+      installments: Yup.number().when((values, schema) =>
         payWithCard ? schema.required('O campo é obrigatório') : schema
       )
     }),
@@ -103,7 +107,7 @@ export const Checkout = () => {
           email: values.deliveryEmail
         },
         payment: {
-          installments: 1,
+          installments: values.installments,
           card: {
             active: payWithCard,
             code: Number(values.installments),
@@ -114,12 +118,15 @@ export const Checkout = () => {
               name: values.cardOwner
             },
             expires: {
-              month: 1,
-              year: 2023
+              month: Number(values.cardExpiration),
+              year: Number(values.cardYearExpiration)
             }
           }
         },
-        products: [{ id: toString(), price: 10 }]
+        products: items.map((item) => ({
+          id: item.id,
+          price: item.prices.current as number
+        }))
       })
     }
   })
@@ -150,13 +157,19 @@ export const Checkout = () => {
     }
   }, [totalPrice])
 
-  if (items.length === 0) {
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(clear())
+    }
+  }, [isSuccess, dispatch])
+
+  if (items.length === 0 && !isSuccess) {
     return <Navigate to="/" />
   }
 
   return (
     <div className="container">
-      {isSuccess ? (
+      {isSuccess && data ? (
         <Card title="Muito obrigado">
           <>
             <p>
@@ -226,7 +239,7 @@ export const Checkout = () => {
                 </InputGroup>
                 <InputGroup>
                   <label htmlFor="cpf">CPF</label>
-                  <input
+                  <InputMask
                     id="cpf"
                     type="text"
                     name="cpf"
@@ -234,6 +247,7 @@ export const Checkout = () => {
                     onChange={form.handleChange}
                     onBlur={form.handleBlur}
                     className={checkInputHasError('cpf') ? 'error' : ''}
+                    mask="999.999.999-99"
                   />
                 </InputGroup>
               </Row>
@@ -317,7 +331,7 @@ export const Checkout = () => {
                         <label htmlFor="cpfCardOwner">
                           CPF do titular do cartão
                         </label>
-                        <input
+                        <InputMask
                           id="cpfCardOwner"
                           type="text"
                           name="cpfCardOwner"
@@ -327,6 +341,7 @@ export const Checkout = () => {
                           className={
                             checkInputHasError('cpfCardOwner') ? 'error' : ''
                           }
+                          mask="999.999.999-99"
                         />
                       </InputGroup>
                     </Row>
@@ -347,7 +362,7 @@ export const Checkout = () => {
                       </InputGroup>
                       <InputGroup>
                         <label htmlFor="cardNumber">Número do cartão</label>
-                        <input
+                        <InputMask
                           id="cardNumber"
                           type="text"
                           name="cardNumber"
@@ -357,11 +372,12 @@ export const Checkout = () => {
                           className={
                             checkInputHasError('cardNumber') ? 'error' : ''
                           }
+                          mask="9999 9999 9999 9999"
                         />
                       </InputGroup>
                       <InputGroup maxWidth="123px">
                         <label htmlFor="cardExpiration">Mês de expiraçãp</label>
-                        <input
+                        <InputMask
                           id="cardExpiration"
                           type="text"
                           name="cardExpiration"
@@ -371,13 +387,14 @@ export const Checkout = () => {
                           className={
                             checkInputHasError('cardExpiration') ? 'error' : ''
                           }
+                          mask="99"
                         />
                       </InputGroup>
                       <InputGroup maxWidth="123px">
                         <label htmlFor="cardYearExpiration">
                           Ano de expiração
                         </label>
-                        <input
+                        <InputMask
                           id="cardYearExpiration"
                           type="text"
                           name="cardYearExpiration"
@@ -389,11 +406,12 @@ export const Checkout = () => {
                               ? 'error'
                               : ''
                           }
+                          mask="99"
                         />
                       </InputGroup>
                       <InputGroup maxWidth="48px">
                         <label htmlFor="cardCVV">CVV</label>
-                        <input
+                        <InputMask
                           id="cardCVV"
                           type="text"
                           name="cardCVV"
@@ -403,6 +421,7 @@ export const Checkout = () => {
                           className={
                             checkInputHasError('cardCVV') ? 'error' : ''
                           }
+                          mask="999"
                         />
                       </InputGroup>
                     </Row>
@@ -420,7 +439,10 @@ export const Checkout = () => {
                           }
                         >
                           {installments.map((installment) => (
-                            <option key={installment.quantity}>
+                            <option
+                              value={installment.quantity}
+                              key={installment.quantity}
+                            >
                               {installment.quantity}x de{' '}
                               {installment.formattedAmount}
                             </option>
@@ -446,8 +468,9 @@ export const Checkout = () => {
             onClick={form.handleSubmit}
             type="submit"
             title="Clique aqui para finalizar a compra"
+            disabled={isLoading}
           >
-            Finalizar compra
+            {isLoading ? 'Processando...' : 'Finalizar compra'}
           </Button>
         </form>
       )}

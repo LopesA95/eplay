@@ -28,7 +28,7 @@ export const Banner = () => {
         </div>
         <Button
           type="link"
-          to="/products/${id}"
+          to={`/product/${game.id}`}
           title="Clique aqui para aproveitar esta oferta"
         >
           Aproveitar

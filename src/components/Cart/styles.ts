@@ -1,7 +1,7 @@
 import styled from 'styled-components'
-import { colors } from '../../styles/theme/theme'
 import { ButtonContainer } from '../Button/styles'
 import { TagContainer } from '../Tag/styles'
+import { colors } from './../../styles/theme/theme'
 
 import fechar from '../../assets/images/close.svg'
 
@@ -37,6 +37,13 @@ export const Sidebar = styled.aside`
   ${ButtonContainer} {
     max-width: 100%;
     width: 100%;
+  }
+
+  .empty-text {
+    font-size: 14px;
+    line-height: 22px;
+    color: ${colors.white};
+    text-align: center;
   }
 `
 
