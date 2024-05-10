@@ -53,7 +53,7 @@ export const Modal = styled.div`
   align-items: center;
   justify-content: center;
 
-  &.visivel {
+  &.is-visible {
     display: flex;
   }
 
@@ -91,6 +91,7 @@ export const ModalContent = styled.div`
   iframe {
     display: block;
     max-width: 100%;
+    cursor: pointer;
   }
 
   iframe {
